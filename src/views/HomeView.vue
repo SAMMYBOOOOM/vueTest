@@ -51,7 +51,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>Personal information</el-dropdown-item>
                 <el-dropdown-item>Change password</el-dropdown-item>
-                <el-dropdown-item @click="">Exit</el-dropdown-item>
+                <el-dropdown-item @click.native="$router.push('/login')">Exit</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
