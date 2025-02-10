@@ -58,25 +58,39 @@
         </el-header>
         <!--        main-->
         <el-main>
-          <div style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 10px 20px; border-radius: 5px; margin-buttom: 10px">
+          <div style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 10px 20px; border-radius: 5px; margin-bottom: 10px">
             Hello world!!
           </div>
-          <el-card style="width: 500px">
-            <div slot="header" class="clearfix">
-              <span>vue demo</span>
-            </div>
-            <div>
-              framework
-              <div style="margin-top: 20px">
-                <div style="margin: 10px 0"><strong>Main theme</strong></div>
-                <el-button type="primary">button</el-button>
-                <el-button type="success">button</el-button>
-                <el-button type="info">button</el-button>
-                <el-button type="warning">button</el-button>
+          <div style="display: flex">
+            <el-card style="width: 50%; margin-right: 10px">
+              <div slot="header" class="clearfix">
+                <span>vue demo</span>
               </div>
-            </div>
-
-          </el-card>
+              <div>
+                framework
+                <div style="margin-top: 20px">
+                  <div style="margin: 10px 0"><strong>Main theme</strong></div>
+                  <el-button type="primary">button</el-button>
+                  <el-button type="success">button</el-button>
+                  <el-button type="info">button</el-button>
+                  <el-button type="warning">button</el-button>
+                </div>
+              </div>
+            </el-card>
+            <el-card style="width: 50%">
+              <div slot="header" class="clearfix">
+                <span>User information</span>
+              </div>
+              <div>
+                <el-table :data="users">
+                  <el-table-column label="ID" prop="id"></el-table-column>
+                  <el-table-column label="username" prop="username"></el-table-column>
+                  <el-table-column label="name" prop="name"></el-table-column>
+                  <el-table-column label="address" prop="address"></el-table-column>
+                </el-table>
+              </div>
+            </el-card>
+          </div>
         </el-main>
 
       </el-container>
@@ -85,14 +99,24 @@
 </template>
 
 <script>
+
+import request from "@/utils/request";
+
 export default {
   name: 'HomeView',
   data() {
     return {
       isCollapse: false,
       asideWidth: '200px',
-      collapseIcon: 'el-icon-s-fold'
+      collapseIcon: 'el-icon-s-fold',
+      users: []
     }
+  },
+  mounted() { // Activated when the page is loaded
+    request.get('user/selectAll').then(res => {
+      this.users = res.data
+      // console.log(res)
+    })
   },
   methods: {
     handleCollapse() {
