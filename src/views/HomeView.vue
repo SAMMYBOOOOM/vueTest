@@ -51,7 +51,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>Personal information</el-dropdown-item>
                 <el-dropdown-item>Change password</el-dropdown-item>
-                <el-dropdown-item @click.native="$router.push('/login')">Exit</el-dropdown-item>
+                <el-dropdown-item @click.native="logout">Exit</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -119,6 +119,10 @@ export default {
     })
   },
   methods: {
+    logout() {
+      localStorage.removeItem('honey-user') // Clear user token
+      this.$router.push('/login')
+    },
     handleCollapse() {
       this.isCollapse = !this.isCollapse
       this.asideWidth = this.isCollapse ? '64px' : '200px'
