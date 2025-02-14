@@ -19,6 +19,12 @@
             <el-input prefix-icon="el-icon-lock" size="medium" show-password placeholder="Confirm password"
                       v-model="user.confirmPass"></el-input>
           </el-form-item>
+          <el-form-item prop="role">
+            <el-radio-group v-model="user.role">
+              <el-radio label="user"></el-radio>
+              <el-radio label="owner"></el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item>
             <el-button type="info" style="width: 100%" @click="register">Register</el-button>
           </el-form-item>
@@ -61,7 +67,10 @@ export default {
         ],
         confirmPass: [
           { validator: validatePassword, trigger: 'blur' }
-        ]
+        ],
+        role: [
+          { required: true, message: 'Please select a role', trigger: 'blur' },
+        ],
       },
     };
   },

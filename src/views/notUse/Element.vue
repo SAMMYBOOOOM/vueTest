@@ -32,28 +32,28 @@
     <el-row>
       <el-col :span="6">
         <div style="padding: 10px; border: 1px solid #ccc; text-align: center">
-          <img style="width: 80%" src="@/assets/logo.png" alt="">
+          <img style="width: 80%" src="../../assets/logo.png" alt="">
           <div style="text-align: center">This is something</div>
           <div style="color: red">Price: 200</div>
         </div>
       </el-col>
       <el-col :span="6">
         <div style="padding: 10px; border: 1px solid #ccc; text-align: center">
-          <img style="width: 80%" src="@/assets/logo.png" alt="">
+          <img style="width: 80%" src="../../assets/logo.png" alt="">
           <div style="text-align: center">This is something</div>
           <div style="color: red">Price: 200</div>
         </div>
       </el-col>
       <el-col :span="6">
         <div style="padding: 10px; border: 1px solid #ccc; text-align: center">
-          <img style="width: 80%" src="@/assets/logo.png" alt="">
+          <img style="width: 80%" src="../../assets/logo.png" alt="">
           <div style="text-align: center">This is something</div>
           <div style="color: red">Price: 200</div>
         </div>
       </el-col>
       <el-col :span="6">
         <div style="padding: 10px; border: 1px solid #ccc; text-align: center">
-          <img style="width: 80%" src="@/assets/logo.png" alt="">
+          <img style="width: 80%" src="../../assets/logo.png" alt="">
           <div style="text-align: center">This is something</div>
           <div style="color: red">Price: 200</div>
         </div>

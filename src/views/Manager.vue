@@ -12,21 +12,21 @@
                  text-color="rgba(255, 255, 255, 0.65)"
                  active-text-color="#fff"
                  style="border: none" :default-active="$route.path">
-          <el-menu-item index="/">
+          <el-menu-item index="/home">
             <template>
-              <i class="el-icon-house"></i>
-              <span slot="title">Home page</span>
+              <i class="el-icon-s-house"></i>
+              <span slot="title">System Home page</span>
             </template>
           </el-menu-item>
           <el-menu-item index="/element">Element</el-menu-item>
           <el-menu-item>Home</el-menu-item>
           <el-menu-item>Home</el-menu-item>
-          <el-submenu>
+          <el-submenu index="info" v-if="user.role === 'admin'">
             <template slot="title">
               <i class="el-icon-menu"></i>
-              <span>Management</span>
+              <span>Info management</span>
             </template>
-            <el-menu-item>User information</el-menu-item>
+            <el-menu-item index="/user">User information</el-menu-item>
             <el-menu-item>Manager information</el-menu-item>
             <el-menu-item>Staff information</el-menu-item>
           </el-submenu>
@@ -46,7 +46,7 @@
             <el-dropdown>
               <div style="display: flex; align-items: center">
                 <img src="@/assets/logo.png" alt="" style="width: 40px; height: 40px">
-                <span>Admin</span>
+                <span>{{ user.name }}</span>
               </div>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>Personal information</el-dropdown-item>
@@ -58,39 +58,7 @@
         </el-header>
         <!--        main-->
         <el-main>
-          <div style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); padding: 10px 20px; border-radius: 5px; margin-bottom: 10px">
-            Hello world!!
-          </div>
-          <div style="display: flex">
-            <el-card style="width: 50%; margin-right: 10px">
-              <div slot="header" class="clearfix">
-                <span>vue demo</span>
-              </div>
-              <div>
-                framework
-                <div style="margin-top: 20px">
-                  <div style="margin: 10px 0"><strong>Main theme</strong></div>
-                  <el-button type="primary">button</el-button>
-                  <el-button type="success">button</el-button>
-                  <el-button type="info">button</el-button>
-                  <el-button type="warning">button</el-button>
-                </div>
-              </div>
-            </el-card>
-            <el-card style="width: 50%">
-              <div slot="header" class="clearfix">
-                <span>User information</span>
-              </div>
-              <div>
-                <el-table :data="users">
-                  <el-table-column label="ID" prop="id"></el-table-column>
-                  <el-table-column label="username" prop="username"></el-table-column>
-                  <el-table-column label="name" prop="name"></el-table-column>
-                  <el-table-column label="address" prop="address"></el-table-column>
-                </el-table>
-              </div>
-            </el-card>
-          </div>
+          <router-view/>
         </el-main>
 
       </el-container>
@@ -109,7 +77,10 @@ export default {
       isCollapse: false,
       asideWidth: '200px',
       collapseIcon: 'el-icon-s-fold',
-      users: []
+      users: [],
+      user: JSON.parse(localStorage.getItem('honey-user') || '{}'),  // To fetch user token
+      url: "",
+      urls: []
     }
   },
   mounted() { // Activated when the page is loaded
@@ -119,6 +90,35 @@ export default {
     })
   },
   methods: {
+    preview(url){
+      window.open(url)  // Open the image in another window
+    },
+    showUrls(){
+      console.log(this.urls)
+    },
+    handleMultipleFileUpload(response, file, fileList) {
+      // fileList is for multiple file upload
+      // use map to combine into a new array
+      this.urls = fileList.map(item => item.response?.data)
+    },
+    handleTableFileUpload(row, file, fileList) {
+      console.log(row, file, fileList)
+      row.avatar = file.response.data
+      console.log(row)
+      // Activate the update interface
+      request.put('user/update', row).then(res => {
+        if(res.code === '200'){
+          this.$message.success("Upload successful")
+        }else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    handleFileUpload(response, file, fileList) {
+      this.fileList = fileList
+      console.log(response, file, fileList)
+      console.log(this.fileList)
+    },
     logout() {
       localStorage.removeItem('honey-user') // Clear user token
       this.$router.push('/login')
