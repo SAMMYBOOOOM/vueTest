@@ -28,15 +28,32 @@
             <el-button type="primary" style="width: 100%" @click="login">Login</el-button>
           </el-form-item>
           <div style="display: flex">
-            <div style="flex: 1">Don't have an account? <span style="color: #0f9876; cursor: pointer" @click="$router.push('/register')">Register</span>
+            <div style="flex: 1">Don't have an account? <span style="color: #0f9876; cursor: pointer"
+                                                              @click="$router.push('/register')">Register</span>
             </div>
-            <div style="flex: 1; text-align: right"><span style="color: #0f9876; cursor: pointer">Forgot password</span>
+            <div style="flex: 1; text-align: right"><span style="color: #0f9876; cursor: pointer" @click="handleForgotPass">Forgot password</span>
             </div>
           </div>
         </el-form>
       </div>
 
     </div>
+
+    <el-dialog :visible.sync="forgotPassDialogVis" title="Forgot password" width="30%">
+      <el-form :model="forgotUserForm" label-width="80px" style="padding-right: 20px">
+        <el-form-item label="Username">
+          <el-input v-model="forgotUserForm.username" autocomplete="off" placeholder="Please enter your username"></el-input>
+        </el-form-item>
+        <el-form-item label="Phone">
+          <el-input v-model="forgotUserForm.phone" placeholder="Please enter your phone"></el-input>
+        </el-form-item>
+      </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="forgotPassDialogVis = false">Cancel</el-button>
+          <el-button type="primary" @click="resetPassword">Confirm</el-button>
+        </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -62,6 +79,10 @@ export default {
     };
 
     return {
+      forgotUserForm: {
+
+      },
+      forgotPassDialogVis: false,
       code: '', // Validation code from component
       user: {
         code: '', // From form (user input)
@@ -85,6 +106,20 @@ export default {
 
   },
   methods: {
+    handleForgotPass() {  // Initialize forgot password dialog
+      this.forgotUserForm = {}
+      this.forgotPassDialogVis = true
+    },
+    resetPassword() {
+      this.$request.put('/password', this.forgotUserForm).then(res => {
+        if(res.code === '200') {
+          this.$message.success('Reset password successfully!')
+        }else{
+          this.$message.error(res.message)
+        }
+      })
+      this.forgotPassDialogVis = false
+    },
     getCode(code) {
       console.log(code)
       this.code = code.toLowerCase()

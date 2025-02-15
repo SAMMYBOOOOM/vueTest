@@ -18,17 +18,16 @@
               <span slot="title">System Home page</span>
             </template>
           </el-menu-item>
+          <el-menu-item index="/person">Personal info</el-menu-item>
           <el-menu-item index="/element">Element</el-menu-item>
-          <el-menu-item>Home</el-menu-item>
-          <el-menu-item>Home</el-menu-item>
           <el-submenu index="info" v-if="user.role === 'admin'">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span>Info management</span>
             </template>
             <el-menu-item index="/user">User information</el-menu-item>
-            <el-menu-item>Manager information</el-menu-item>
-            <el-menu-item>Staff information</el-menu-item>
+            <el-menu-item index="/manager">Manager information</el-menu-item>
+            <el-menu-item index="/staff">Staff information</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -39,18 +38,18 @@
           <i :class="collapseIcon" style="font-size: 26px" @click="handleCollapse"></i>
           <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-left: 20px">
             <el-breadcrumb-item :to="{ path: '/' }">Home</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/user' }">User management</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: $route.path }">{{ $route.meta.name }}</el-breadcrumb-item>
           </el-breadcrumb>
 
           <div style="flex: 1; width: 0; display: flex; align-items: center; justify-content: flex-end">
             <el-dropdown>
               <div style="display: flex; align-items: center">
-                <img src="@/assets/logo.png" alt="" style="width: 40px; height: 40px">
+                <img :src="user.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'" alt="" style="width: 40px; height: 40px; border-radius: 50%; margin: 0 5px">
                 <span>{{ user.name }}</span>
               </div>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>Personal information</el-dropdown-item>
-                <el-dropdown-item>Change password</el-dropdown-item>
+                <el-dropdown-item @click.native="$router.push('/person')">Personal information</el-dropdown-item>
+                <el-dropdown-item @click.native="$router.push('/password')">Change password</el-dropdown-item>
                 <el-dropdown-item @click.native="logout">Exit</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -58,7 +57,8 @@
         </el-header>
         <!--        main-->
         <el-main>
-          <router-view/>
+          <!--    To take user information from child page      -->
+          <router-view @update:user="updateUser"/>
         </el-main>
 
       </el-container>
@@ -68,8 +68,6 @@
 
 <script>
 
-import request from "@/utils/request";
-
 export default {
   name: 'HomeView',
   data() {
@@ -77,47 +75,14 @@ export default {
       isCollapse: false,
       asideWidth: '200px',
       collapseIcon: 'el-icon-s-fold',
-      users: [],
       user: JSON.parse(localStorage.getItem('honey-user') || '{}'),  // To fetch user token
-      url: "",
-      urls: []
     }
   },
-  mounted() { // Activated when the page is loaded
-    request.get('user/selectAll').then(res => {
-      this.users = res.data
-      // console.log(res)
-    })
+  mounted() {
   },
   methods: {
-    preview(url){
-      window.open(url)  // Open the image in another window
-    },
-    showUrls(){
-      console.log(this.urls)
-    },
-    handleMultipleFileUpload(response, file, fileList) {
-      // fileList is for multiple file upload
-      // use map to combine into a new array
-      this.urls = fileList.map(item => item.response?.data)
-    },
-    handleTableFileUpload(row, file, fileList) {
-      console.log(row, file, fileList)
-      row.avatar = file.response.data
-      console.log(row)
-      // Activate the update interface
-      request.put('user/update', row).then(res => {
-        if(res.code === '200'){
-          this.$message.success("Upload successful")
-        }else {
-          this.$message.error(res.message)
-        }
-      })
-    },
-    handleFileUpload(response, file, fileList) {
-      this.fileList = fileList
-      console.log(response, file, fileList)
-      console.log(this.fileList)
+    updateUser(user) {
+      this.user = JSON.parse(JSON.stringify(user))  // Make the parent object doesn't change with the child object
     },
     logout() {
       localStorage.removeItem('honey-user') // Clear user token
