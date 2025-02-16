@@ -44,6 +44,15 @@ router.beforeEach((to, from, next) => {
     let user = JSON.parse(localStorage.getItem("honey-user") || '{}')
 
 
+    // Redirect to login page if not logged in
+    if (!user.token && to.path !== '/login') {
+        next('/login')
+    }
+
+    // Redirect to home page if logged in
+    if (user.token && to.path === '/login' || to.path === '/register') {
+        next('/home')
+    }
 
     // Redirect to 403 page if no permission to access
     if (user.role !== 'admin' && adminPaths.includes(to.path)) {

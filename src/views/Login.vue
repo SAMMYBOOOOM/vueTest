@@ -129,9 +129,11 @@ export default {
         if (valid) {
           this.$request.post('/login', this.user).then(res => {
             if (res.code === '200') {
-              this.$router.push('/')
               this.$message.success('Login successful')
               localStorage.setItem("honey-user", JSON.stringify(res.data))  // Store user info
+              this.$router.push('/')
+              window.location.reload()
+
             } else {
               this.$message.error(res.message)
             }
