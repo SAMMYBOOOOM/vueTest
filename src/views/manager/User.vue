@@ -9,6 +9,10 @@
     <div style="margin: 10px 0">
       <el-button type="primary" plain @click="handleAdd">Add user</el-button>
       <el-button type="danger" plain @click="delBatch">Batch delete</el-button>
+      <el-button type="info" plain @click="exportData">Batch export</el-button>
+      <el-upload action="http://localhost:9090/user/import" :headers="{token: user.token}" :on-success="handleImport" style="display: inline-block; margin-left: 10px" :show-file-list="false">
+        <el-button type="primary" plain>Batch import</el-button>
+      </el-upload>
     </div>
     <el-table :data="tableData" stripe :header-cell-style="{background: 'aliceblue', color: '#666'}"
               @selection-change="handleSelectionChange">
@@ -120,8 +124,24 @@ export default {
     this.load()
   },
   methods: {
+    handleImport(res, file, fileList) {  // Batch import
+      if(res.code === '200') {
+        this.$message.success("Batch import successfully")
+        this.load(1)
+      }else{
+        this.$message.error(res.message)
+      }
+    },
+    exportData() {  // Batch export
+      if(!this.ids.length) {  // If no data is selected, export all data
+        window.open('http://localhost:9090/user/export?token=' + this.user.token + '&username=' + this.username + '&name=' + this.name)
+      }else{
+        let idsStr = this.ids.join(',')
+        window.open('http://localhost:9090/user/export?token=' + this.user.token + '&ids=' + idsStr)
+      }
+    },
     delBatch() {
-      if(!this.ids.length) {
+      if (!this.ids.length) {
         this.$message.warning("Please select data")
         return
       }
@@ -196,9 +216,16 @@ export default {
           name: this.name,
         }
       }).then(res => {
-        this.tableData = res.data.records
-        this.total = res.data.total
-      })
+        if (res.data) {
+          this.tableData = res.data.records || [];
+          this.total = res.data.total || 0;
+        } else {
+          this.tableData = [];
+          this.total = 0;
+        }
+      }).catch(error => {
+        console.error('Error fetching data:', error);
+      });
     },
     handleCurrentChange(pageNum) {
       this.load(pageNum)

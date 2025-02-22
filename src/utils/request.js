@@ -9,7 +9,7 @@ const request = axios.create({
 request.interceptors.request.use(config => {
     config.headers['Constent-Type'] = 'application/json;charset=utf-8'
     let user = JSON.parse(localStorage.getItem("honey-user") || '{}')
-    config.headers['token'] = user.token   // token
+    config.headers['token'] = user.token   // setting request header
 
     return config
 }, error => {
