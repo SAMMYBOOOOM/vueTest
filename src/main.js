@@ -11,6 +11,8 @@ Vue.config.productionTip = false
 Vue.use(ElementUI, { size: 'small' }) // normal, small, mini
 
 Vue.prototype.$request=request
+// Vue.prototype.$baseUrl=process.env.VUE_APP_BASEURL
+Vue.prototype.$baseUrl="http://localhost:9090"  // Like global var
 
 new Vue({
   router,

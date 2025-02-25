@@ -8,7 +8,8 @@
           logo
         </div>
 
-        <el-menu :collapse="isCollapse" :collapse-transition="false" router background-color="#001529"
+        <el-menu :default-openeds="['info']" :collapse="isCollapse" :collapse-transition="false" router
+                 background-color="#001529"
                  text-color="rgba(255, 255, 255, 0.65)"
                  active-text-color="#fff"
                  style="border: none" :default-active="$route.path">
@@ -26,7 +27,7 @@
               <span>Info management</span>
             </template>
             <el-menu-item index="/user">User information</el-menu-item>
-            <el-menu-item index="/manager">Manager information</el-menu-item>
+            <el-menu-item index="/news">News information</el-menu-item>
             <el-menu-item index="/staff">Staff information</el-menu-item>
           </el-submenu>
         </el-menu>
@@ -44,7 +45,8 @@
           <div style="flex: 1; width: 0; display: flex; align-items: center; justify-content: flex-end">
             <el-dropdown>
               <div style="display: flex; align-items: center">
-                <img :src="user.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'" alt="" style="width: 40px; height: 40px; border-radius: 50%; margin: 0 5px">
+                <img :src="user.avatar || 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'" alt=""
+                     style="width: 40px; height: 40px; border-radius: 50%; margin: 0 5px">
                 <span>{{ user.name }}</span>
               </div>
               <el-dropdown-menu slot="dropdown">
@@ -78,9 +80,17 @@ export default {
       user: JSON.parse(localStorage.getItem('honey-user') || '{}'),  // To fetch user token
     }
   },
+  created() {
+    this.verifyToken()
+  },
   mounted() {
   },
   methods: {
+    verifyToken() {
+      this.$request.get('/auth/verify').catch(() => {
+        this.logout()
+      })
+    },
     updateUser(user) {
       this.user = JSON.parse(JSON.stringify(user))  // Make the parent object doesn't change with the child object
     },

@@ -22,6 +22,8 @@ const routes = [
             {path: '/user', name: 'User', meta: {name: 'User information'}, component: () => import("../views/manager/User.vue")},
             {path: '/person', name: 'Person', meta: {name: 'Personal information'}, component: () => import("../views/manager/Person.vue")},
             {path: '/password', name: 'Password', meta: {name: 'Change password'}, component: () => import("../views/manager/Password.vue")},
+            {path: '/news', name: 'News', meta: {name: 'News Information'}, component: () => import("../views/manager/News.vue")},
+            {path: '/newsDetail', name: 'NewsDetail', meta: {name: 'News Detail'}, component: () => import("../views/manager/NewsDetail.vue")},
         ]
     },
     {path: "/login", name: "Login", meta: {name: 'Login'}, component: () => import("../views/Login.vue")},
@@ -45,14 +47,14 @@ router.beforeEach((to, from, next) => {
 
 
     // Redirect to login page if not logged in
-    if (!user.token && to.path !== '/login') {
-        next('/login')
-    }
+    // if (!user.token && to.path !== '/login') {
+    //     next('/login')
+    // }
 
     // Redirect to home page if logged in
-    if (user.token && to.path === '/login' || to.path === '/register') {
-        next('/home')
-    }
+    // if (user.token && to.path === '/login' || to.path === '/register') {
+    //     next('/home')
+    // }
 
     // Redirect to 403 page if no permission to access
     if (user.role !== 'admin' && adminPaths.includes(to.path)) {
