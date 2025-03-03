@@ -28,6 +28,7 @@
             </template>
             <el-menu-item index="/user">User information</el-menu-item>
             <el-menu-item index="/news">News information</el-menu-item>
+            <el-menu-item index="/announcement">System announcement</el-menu-item>
             <el-menu-item index="/staff">Staff information</el-menu-item>
           </el-submenu>
         </el-menu>

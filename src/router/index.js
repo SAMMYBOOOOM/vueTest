@@ -24,6 +24,7 @@ const routes = [
             {path: '/password', name: 'Password', meta: {name: 'Change password'}, component: () => import("../views/manager/Password.vue")},
             {path: '/news', name: 'News', meta: {name: 'News Information'}, component: () => import("../views/manager/News.vue")},
             {path: '/newsDetail', name: 'NewsDetail', meta: {name: 'News Detail'}, component: () => import("../views/manager/NewsDetail.vue")},
+            {path: '/announcement', name: 'Announcement', meta: {name: 'System Announcement'}, component: () => import("../views/manager/Announcement.vue")},
         ]
     },
     {path: "/login", name: "Login", meta: {name: 'Login'}, component: () => import("../views/Login.vue")},
